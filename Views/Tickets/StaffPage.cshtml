@@ -1,0 +1,186 @@
+﻿@using WebApplication1.Models
+@model IEnumerable<WebApplication1.Models.Ticket>
+
+@{
+    Layout = "~/Views/Shared/Global.cshtml";
+    ViewBag.Title = "Staff Page";
+
+    int orderCount = 0;
+
+    float totalPrice = 0;
+}
+
+<div id="orderMainSection">
+    <!-- Works. :) -->
+    <div id="blankSpaceTopMenu">
+        <p>Staff Page</p>
+    </div>
+
+    @foreach(var item in Model)
+    {
+        <h1 id="staffTNum">Table @item.TableNumber</h1>
+        int tNum = item.TableNumber;
+        break;
+    }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "Starters")
+        {
+            <h1>Starters</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+
+        <select name="foodStatus" id="btnGet">
+            <option value="preparing">Preparing</option>
+            <option value="cooking">Cooking</option>
+            <option value="plating">Plating</option>
+            <option value="done">Done</option>
+        </select>
+
+    @foreach (var item in Model)
+    {
+        orderCount++;
+        if (item.Category.Trim() == "Starters")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    @{float a = (float)item.Price * item.Quantity;}
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                <p>£@a</p>
+            </div>
+                            }
+
+                            // Can just do this in one since it doesn't matter what it is.
+                            totalPrice += ((float)item.Price * item.Quantity);
+                        }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "Main Meal")
+        {
+            <h1>Mains</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "Main Meal")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                @{float a = (float)item.Price * item.Quantity;}
+                <p>£@a</p>            </div>
+                        }
+                    }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "Desserts")
+        {
+            <h1>Desserts</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "Desserts")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                @{float a = (float)item.Price * item.Quantity;}
+                <p>£@a</p>
+            </div>
+                        }
+                    }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "Lunch")
+        {
+            <h1>Lunch</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "Lunch")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                @{float a = (float)item.Price * item.Quantity;}
+                <p>£@a</p>
+            </div>
+                        }
+                    }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "alcoholic" || item.Category.Trim() == "non-a")
+        {
+            <h1>Drinks</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (item.Category.Trim() == "alcoholic" || item.Category.Trim() == "non-a")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                @{float a = (float)item.Price * item.Quantity;}
+                <p>£@a</p>
+            </div>
+                        }
+                    }
+
+    @{
+        OrderNumber.orderValue = 0;
+    }
+
+    <p id="txtHint"></p>
+
+</div>
+
+<!-- <input type="text" id="txtName" />
+<input type="button" id="btnGet" value="Get Current Time" /> -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+
+        $(function () {
+            $("#btnGet").change(function () {
+                var linkString = "/Tickets/AjaxMethod/" + btnGet.value;
+                $.ajax({
+                    type: "POST",
+                    url: linkString,
+                    data: '',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        
+                    },
+                    failure: function (response) {
+                        alert(sada);
+                    },
+                    error: function (response) {
+                        alert(sada);
+                    }
+                });
+            });
+        });
+</script> 

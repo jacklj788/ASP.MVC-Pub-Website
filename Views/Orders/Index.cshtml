@@ -1,0 +1,207 @@
+﻿@using WebApplication1.Models
+@model IEnumerable<WebApplication1.Models.Order>
+
+@{
+    Layout = "~/Views/Shared/Global.cshtml";
+    ViewBag.Title = "Order";
+
+    int orderCount = 0;
+
+    float totalPrice = 0;
+}
+
+<div id="orderMainSection">
+    <!-- Works. :) -->
+    <div id="blankSpaceTopMenu">
+        <p>Your Order</p>
+    </div>
+
+    @foreach (var item in Model)
+    {
+        if (item.Category == "Starters")
+        {
+            <h1>Starters</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        orderCount++;
+        if (item.Category == "Starters")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    @{float a = (float)item.Price * item.Quantity;}
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                <p>£@a</p>
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+
+                <!-- &#8855; is a O with an X in it. HTML Code. -->
+                <a href="/Orders/Delete/@item.ID" style="text-decoration:none; color: red; font-size: 18pt;"><b>&#8855;</b></a>
+
+            </div>
+                            }
+
+                            // Can just do this in one since it doesn't matter what it is.
+           totalPrice += ((float)item.Price * item.Quantity);
+    }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category == "Main Meal")
+        {
+            <h1>Mains</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (item.Category == "Main Meal")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                @{float a = (float)item.Price * item.Quantity;}
+                <p>£@a</p>
+
+                <a href="/Orders/Delete/@item.ID" style="text-decoration:none; color: red; font-size: 18pt;"><b>&#8855;</b></a>
+            </div>
+                        }
+                    }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category == "Desserts")
+        {
+            <h1>Desserts</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (item.Category == "Desserts")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                @{float a = (float)item.Price * item.Quantity;}
+                <p>£@a</p>
+
+                <a href="/Orders/Delete/@item.ID" style="text-decoration:none; color: red; font-size: 18pt;"><b>&#8855;</b></a>
+            </div>
+         }
+    }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category == "Lunch")
+        {
+            <h1>Lunch</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (item.Category == "Lunch")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                @{float a = (float)item.Price * item.Quantity;}
+                <p>£@a</p>
+
+                <a href="/Orders/Delete/@item.ID" style="text-decoration:none; color: red; font-size: 18pt;"><b>&#8855;</b></a>
+            </div>
+                        }
+                    }
+
+    @foreach (var item in Model)
+    {
+        if (item.Category == "alcoholic" || item.Category == "non-alcoholic")
+        {
+            <h1>Drinks</h1>
+            // Only want it to print once, so break out of this loop.
+            break;
+        }
+    }
+    @foreach (var item in Model)
+    {
+        if (item.Category == "alcoholic" || item.Category == "non-alcoholic")
+        {
+            <div class="orderMenuItems">
+                <div style="width: 400px; display: inline-block; margin-left: 30%;">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                @{float a = (float)item.Price * item.Quantity;}
+                <p>£@a</p>
+
+                <a href="/Orders/Delete/@item.ID" style="text-decoration:none; color: red; font-size: 18pt;"><b>&#8855;</b></a>
+            </div>
+                        }
+                    }
+
+    <br /><br /><br /><br />
+    <h2 style="margin-left: 64%; font-family: 'Script MT'">£@totalPrice</h2>
+
+    <a href="/Orders/Test">hello work please and thanks. </a>
+
+    @{
+        OrderNumber.orderValue = orderCount;
+    }
+
+
+    </div>
+<div id="paypal-button"></div>
+
+<script>
+        paypal.Button.render({
+
+            env: 'sandbox', // Or 'sandbox',
+
+            client: {
+                sandbox: 'AWyh4EH-vgQhTSV_5qjqHc0Fa_nCiqoCKJSK-zvUdmYF5gj5HL6Sv93Y8Rjw-7YByyhQpnMrjUYNALBY',
+                production: 'AbUBCNM6ykMe48X0ZUhm6PjjDz8fvX8sWTlEnPPQ45ZCQTu0armNO5wElEbLTaulIN_PjrcKuLmRs5gE'
+            },
+
+            commit: true, // Show a 'Pay Now' button
+
+            style: {
+                size: 'medium',
+                color: 'gold',
+                shape: 'rect',
+                label: 'checkout'
+            },
+            
+
+            payment: function(data, actions) {
+                // Set up the payment here
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: { total: '4.00', currency: 'GBP' }
+                            }
+                        ]
+                    }
+                });
+            },
+
+            onAuthorize: function(data, actions) {
+                // Execute the payment here
+                return actions.payment.execute().then(function (payment) {
+
+                    // The payment is complete!
+                    // You can now show a confirmation message to the customer
+                });
+           }
+
+        }, '#paypal-button');
+</script>

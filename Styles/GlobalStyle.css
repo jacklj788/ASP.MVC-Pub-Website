@@ -1,0 +1,1086 @@
+﻿/*#region Global */
+
+* {
+    /* Removes the ugly orange border found on mobile chrome */
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important; 
+    outline: none !important;
+} 
+
+body {
+    /* salad 2 = clear , 9 = blur */
+    background-image: url("../Images/woodTable.png");
+    background-attachment: fixed;
+    background-color: #1A1A1D;
+    padding: 0;
+
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* This lets me put a div.header height percentage, otherwise I need to define a px size */
+html, body {
+    height:100%;
+    /* Values of 0 shouldn't / don't need to have a value tpye specified, such as px or % */
+    margin: 0;
+    padding: 0;
+}
+
+#header {
+    position: absolute;
+    top: 20%;
+    z-index: 1;
+    background-color: #6F2232;
+    /* Auto margin + no float = center align */
+    margin: auto;
+    margin-top: 0;
+    width: 60%;
+    height: 8%;
+    position: relative;
+}
+
+@media screen and (max-width: 1300px) {
+    #header {
+        width: 102%;
+        height: 10%;
+        top: 0;
+    }
+}
+
+#header #logoImage {
+    float: left;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: -27%;
+}
+
+#header #menu {
+    position: absolute;
+    left: 50%;
+    top: -11%;
+    font-size: 24px;
+    font-family: Calibri;
+    color: black;
+    cursor: pointer;
+    width: 6%;
+    text-align: center;
+    border-radius: 40px;
+}
+#header #menu:hover {
+    color: white; 
+    background: #2A2A2D;
+}
+#header img {
+    padding: 10px;
+}
+
+/* LOCATE Button */
+#locateBtn {
+    border-radius: 50px;
+    position: absolute;
+    top: 3px;
+    left: 600px;
+    width: 65px;
+    height: 65px;
+    background-color: rgba(0, 0, 0, 0.9);
+    margin: 2px;
+    /* This disables the blue highlight in chrome. Other methods needed for other browsers. */
+    user-select: none;
+}
+#locateBtn img {
+    width: 70%;
+    height: 70%;
+    position: absolute;
+    left: 0px;
+}
+#locateBtn:hover {
+    cursor: pointer;
+}
+/* When you hover over the locateBtn, effect the img in this way.. */
+#locateBtn:hover img {
+    /* Animation name - Duration it runs for - Loop? */
+    animation : bounce .7s infinite
+}
+/* Bounce Animation */
+@keyframes bounce
+{
+    /* Top = moves my absoulte postioned image up and down */
+    0% {
+        top: -6px;
+    }
+    10% {
+        top: -5px;
+    }
+    20% {
+        top: -4px;
+    }
+    30% {
+        top: -3px;
+    }
+    40% {
+        top: -2px;
+    }
+    50% {
+        top: -1px;
+    }
+    60% {
+        top: 0;
+    }
+    70% {
+        top: 1px;
+    }
+    80% {
+        top: 2px;
+    }
+    90% {
+        top: 3px;
+    }
+    100% {
+        top: 4px;
+    }
+}
+
+/* CLOCK Button */
+#clockBtn {
+    position: absolute;
+    top: 4px;
+    left: 480px;
+    width: 65px;
+    height: 65px;
+    text-align: center;
+    border-radius: 50px;
+    background-color: rgba(0, 0, 0, 0.9);
+    background-image: url('../Images/clock.png');
+    margin: 2px;
+
+    user-select: none;
+}
+#clockBtn:hover{
+    background-image: url('../Images/clockGifSlow.gif');
+    cursor: pointer;
+}
+
+
+/* Window that pops up when clock is pressed */
+#hiddenClock {
+    position: absolute;
+    top: 30%;
+    left: 22.5%;
+    width: 55%;
+    height: 50%;
+    border: 2px white solid;
+    box-shadow: 0 0 5px red;
+    background-color: rgba(0,0,0,1);
+    /* Brings it to the front. -1 would be the back, 0 would be between elements*/
+    z-index: 1;
+    /* JS function shows it on clockBtn click - see Global.cshtml */
+    display: none;
+}
+/* Hidden opening times stuff */
+#hiddenClock h1 {
+    color: white;
+    text-align:center;
+    font-family: 'Open Sans';
+    text-decoration: underline;
+}
+/* Used so I can get the text centered, but the text itself is left aligned */
+#hiddenClock #textContainer {
+    margin: auto;
+    width: 40%;
+    height: auto;
+    left: 4.5%;
+    position: relative;
+}
+#hiddenClock li {
+    color: white;
+    list-style: none;
+    text-align: left;
+    font-family: 'Open Sans';
+    font-size: 22pt;
+}
+#hiddenClock li p {
+    color: red;
+    display: inline;
+}
+
+
+/* Google maps stuff*/
+#hiddenLocation {
+    position: absolute;
+    top: 30%;
+    left: 22.5%;
+    width: 55%;
+    height: 50%;
+    border: 2px white solid;
+    box-shadow: 0 0 5px blue;
+    background-color: rgba(0,0,0,1);
+    /* Brings it to the front. -1 would be the back, 0 would be between elements*/
+    z-index: 1;
+    /* JS function shows it on clockBtn click - see Global.cshtml */
+    display: none;
+
+}
+#googleMapWrapper {
+    width: 60%;
+    height: 95%;
+    margin: 1%;
+    /*border: 2px solid red;*/
+    display: inline-block;
+}
+#locationWordWrapper {
+    width: 35%;
+    height: 95%;
+    float: right;
+    margin: 1%;
+}
+#address {
+    color: white;
+    font-family: 'Open Sans';
+}
+#googleAPITextDistance {
+    color: white;
+    font-family: 'Open Sans';
+}
+#mapImages {
+    width: 20%;
+    height: 66%;
+    float: left;
+}
+#mapImages img {
+    width: 100%;
+    height: 22%;
+}
+#mapDurations {
+    width: 78%;
+    height: 66%;
+    color: white;
+    float: right;
+}
+#mapDurations p {
+    font-size: 16pt;
+    line-height: 220%;
+    font-family: 'Open Sans';
+}
+
+@media only screen and (max-width: 1300px) {
+    #hiddenLocation {
+        width: 100%;
+        height: 50%;
+        top: 25;
+        left: 0;
+
+        padding: 0px;
+    }
+
+    #googleMapWrapper {
+        width: 100%;
+        height: 100%;
+        left: 0;
+        margin: 0;
+    }
+
+    #locationWordWrapper {
+        display: none;
+    }
+    #googleAPITextDistance {
+        display: none;
+    }
+    #mapImages {
+        display: none;
+    }
+    #mapDurations {
+        display: none;
+    }
+}
+
+#menuBtn {
+    position: absolute;
+    top: 10px;
+    left: 150px;
+    width: 140px;
+    height: 55px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 1);
+    margin: 2px;
+    user-select: none;
+
+    text-decoration: none;
+    color: white;
+    vertical-align: central;
+
+    border: 1px solid white;
+}
+#menuBtn p {
+    position: absolute;
+    left: 20%;
+    top: -20%;
+    font-family: 'Open Sans';
+    font-size: 18pt;
+}
+
+#menuBtn:hover #menuRightSection {
+    display: inline-block;
+}
+
+#menuRightSection {
+    display: none;
+
+    background-color: black;
+    width: 140px;
+    border: 1px solid white;
+
+    height: 500px;
+
+    box-shadow:0 0 0 2000px rgba(0,0,0,0.6);
+}
+
+#menuRightSection img {
+    margin-bottom: 20px;
+}
+
+#menuRightSection p {
+    color: white;
+}
+#pLunch p{
+    position: absolute;
+    top: 50px;
+}
+#pDinner p{
+    position: absolute;
+    top: 180px;
+}
+#pDrinks p{
+    position: absolute;
+    top: 330px;
+}
+
+.menusIcons {
+    position: relative;
+    top: 80px;
+    left: 0px
+}
+
+#lunchMenuIcons:hover {
+    content: url('../Images/lunchIconHover.png')
+}
+#dinnerMenuIcons:hover {
+    content: url('../Images/dinnerIconHover.png')
+}
+#drinkMenuIcons:hover {
+    content: url('../Images/drinksIconHover.png')
+}
+
+#basketBtn {
+    position: absolute;
+    top: 10px;
+    left: 80%;
+    width: 17%;
+    height: 55px;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 1);
+    margin: 2px;
+    user-select: none;
+
+    text-decoration: none;
+    color: white;
+    vertical-align: central;
+
+    border: 1px solid white;
+}
+#basketBtn:hover{
+    background-color: rgba(0, 0, 0, .5);
+}
+#basketBtn img {
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    top: -34%;
+    left: 50%;
+}
+#basketBtn p { 
+    color: white;
+    width: 30%;
+    font-family: 'Open Sans';
+    font-size: 18pt;
+
+    position: absolute;
+    top: -25%;
+    left: 25px;
+}
+
+#orderDisplayCount {
+    position: absolute;
+    top: 7px;
+    right: 22px;
+
+    background-color: red;
+    border-radius: 50px;
+
+    width: 20px;
+    height: 20px;
+}
+
+#orderDisplayCount p {
+    position: absolute;
+    top: -13px;
+    left: 6px;
+
+    font-size: 10pt;
+}
+
+#mobileMenuBtn {
+    float: right;
+    width: 50px;
+    height: 50px;
+    width: 30px;
+    height: 220px;
+    position: absolute; 
+    right: 200px;
+    top: 5px;
+
+    display: none;
+}
+#mobileMenuBtn img {
+    width: 10%;
+    height: 45%;
+}
+
+
+
+@media only screen and (max-width: 1300px) {
+
+    #header {
+        width: 101%;
+    }
+
+    #homeMainOffer {
+        display: block;
+    }
+    #homeMainOffer #mainOfferImage {
+        width: 101%;
+        height: 80%;
+        display: inline-block;
+    }
+
+    #homeQuizNight {
+        display: inline-block;
+        position: absolute;
+        top: 49%;
+    }
+
+    #aboutMainSection {
+        display: block;
+        top: 33%;
+    }
+
+    #mobileMenuBtn {
+        display: block;
+    }
+    #mobileMenuBtn img {
+        width: 130px;
+    }
+
+    #mobileMenuBtn #dropDownMobile {
+        display: none;
+        position: relative;
+        background-color: white;
+        z-index: 1;
+        left: -759px;
+        top: 10px;
+        width: 988px;
+        height: 1300px;
+
+        border: 1px solid red;
+
+        text-align: center;
+    }
+
+    #mobileMenuBtn #dropDownMobile a {
+        color: black;
+        font-size: 92px;
+        font-family: 'Open Sans';
+
+        border: 1px solid black;
+
+        width: 100%;
+
+        display: block;
+
+        margin-bottom: 10%;
+    }
+
+    #mobileMenuBtn:hover #dropDownMobile {
+        display: block;
+    }
+
+    #header #logoImage {
+        top: 0;
+        width: 15%;
+        height: 88%;
+    }
+
+    #clockBtn {
+        display: none;
+    }
+    #locateBtn {
+        display: none;
+    }
+    #menuBtn {
+        display: none;
+    }
+    #basketBtn {
+        display: none;
+    }
+
+
+}
+/*#endregion*/
+
+
+/*#region Home Page */
+/* MAIN BACKGROUND IMAGE - NEEDS A RENAME*/
+#homeMainOffer {
+    position: relative; 
+    top: -8%;
+    height: 100%;
+    width: 60%;
+    margin: auto;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    background-color: #DDDDDD;
+    
+    /* rgba lets me play with the transparancy */
+    box-shadow: 22px 0 20px -4px rgba(0, 0, 0, 0.8), -22px 0 20px -4px rgba(0, 0, 0, 0.8);
+}
+
+@media only screen and (max-width: 1000px) {
+    #homeMainOffer {
+        width: 100%;
+        height: 33%;
+    }
+    #homeMainOffer > img {
+        display: none;
+    }
+}
+
+/* 100% of the DIV homeMainOffer */
+#mainOfferImage {
+    position: relative;
+    left: 10px;
+    top: 100px;
+    width: 1120px;
+    height: 600px;
+}
+
+@media only screen and (max-width: 1300px) {
+    #mainOfferImage {
+        width: 101%;
+        left: 0;
+    }
+}
+
+/* Light grey splitter */
+#homeQuizNight {
+    width: 60%;
+    margin: auto;
+    height: 30%;
+    background-color: #2a2a2d;
+    margin-top: -4%;
+}
+#homeQuizNight img {
+    height: 100%;
+    width: 40%;
+    margin: auto;
+    display: block;
+}
+@media only screen and (max-width: 1000px) {
+    #homeQuizNight {
+        width: 101%;
+        height: 30%;
+    }
+    #homeQuizNight img {
+        width: 60%;
+    }
+}
+
+
+/* BUTTON STYLING FOR THE SLIDE SHOW */
+#homeQuizNight #btnLeft {
+    position: absolute;
+    top: 113%;
+    left: 26%;
+    width: 4%;
+    height: 8%;
+    /* Opactity: 0; also changes the text. This makes it so just the btn is invisible */
+    background-color: rgba(255,0,0,0);
+    border-color: rgba(0,0,0,0);
+}
+
+#homeQuizNight #btnLeft p {
+    color: deeppink;
+    position: absolute;
+    top: -35%;
+    left: 40%;
+    font-size: 26pt;
+}
+
+#homeQuizNight #btnRight {
+    position: absolute;
+    top: 113%;
+    right: 26%;
+    width: 4%;
+    height: 8%;
+    background-color: rgba(255,0,0,0);
+    border-color: rgba(0,0,0,0);
+}
+#homeQuizNight #btnRight p {
+    color: deeppink;
+    position: absolute;
+    top: -35%;
+    left: 40%;
+    font-size: 26pt;
+}
+
+@media only screen and (max-width: 1300px) {
+
+    #homeQuizNight #btnLeft {
+        top: 18%;
+        left: 1%;
+        height: 60%; 
+        width: 20%;
+    }
+    #homeQuizNight #btnLeft p {
+        top: -17%;
+        font-size: 82px;
+    }
+
+    #homeQuizNight #btnRight {
+        top: 18%;
+        right: 1%;
+        height: 60%; 
+        width: 20%;
+    }
+    #homeQuizNight #btnRight p {
+        top: -17%;
+        font-size: 82px;
+    }
+}
+/*#endregion*/
+
+
+/*#region Menu Page */
+/* Fixed Block lets menuNav slide up and down the page - elevator shaft to the block */
+
+@media only screen and (min-width: 1300px) {
+    #fixedBlock {
+        float: left;
+        width: 16%;
+        height: 41%;
+    }
+    /* Menu nav = left side menu*/
+    #menuNav {
+        float: left;
+        width: 10%;
+        height: 150px;
+        border: 1px solid black;
+        background-color: #DDDDDD;
+        box-shadow: 0 0 40px #000000;
+        position: fixed;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+    }
+
+    #menuNav a {
+        color: black;
+        font-size: 24pt;
+        font-family: 'Open Sans';
+        text-decoration: none;
+        margin: 5%;
+    }
+
+    #menuNav a:hover {
+        text-decoration: underline deeppink;
+    }
+
+    #orderNav {
+        width: 330px;
+        height: 300px;
+        float: left;
+        border: 1px solid black;
+        background-color: #DDDDDD;
+        box-shadow: 0 0 40px #000000;
+        position: fixed;
+        top: 300px;
+        left: 20px;
+    }
+
+    #blankSpaceTopMenu {
+    height: 200px;
+    }
+    #blankSpaceTopMenu p {
+        text-align: center;
+        font-size: 72pt;
+        color: deeppink;
+        font-family: DengXian;
+        position: relative;
+        top: -50px
+    }
+    #blankSpaceTopMenu #time {
+        text-align: center;
+        font-size: 16pt;
+        color: black;
+        font-family: DengXian;
+        position: relative;
+        top: -150px;
+        right: -236px;
+    }
+}
+
+
+/* menu section = middle section */
+#menuSection {
+    width: 60%;
+    height: auto;
+    min-height: 1000px;
+    top: -10%;
+    margin: auto;
+    position: relative;
+    border: 1px solid black;
+    background-color: #DDDDDD;
+    box-shadow: 22px 0 20px -4px rgba(0, 0, 0, 0.8), -22px 0 20px -4px rgba(0, 0, 0, 0.8);
+}
+
+#menuSection > h1 {
+    text-align: center;
+    font-family: 'Courier New';
+    font-size: 34pt;
+    color: deeppink;
+}
+
+
+/* Menu items = what it sounds.*/
+.menuItems {
+    display: inline-block;
+    width: 540px;
+    height: 70px;
+    margin: 10px;
+    border: 1px solid #000000;
+}
+.menuItems h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: .5%;
+}
+.menuItems p {
+    font-family: 'Times New Roman';
+    font-size: 12pt;
+    margin: .5%;
+}
+.menuItems .price {
+    float: right;
+    margin: .5%;
+    font-family: Calibri;
+    font-size: 18pt;
+    position: relative;
+    bottom: 44px;
+    right: 80px;
+}
+.menuItems a {
+    float: right;
+    margin: .5%;
+    font-family: Calibri;
+    font-size: 18pt;
+    position: relative;
+    bottom: 50px;
+    left: 40px;
+}
+
+.menuItems a img {
+    width: 40px;
+    height: 40px;
+}
+
+.menuItems a img:hover {
+    cursor: pointer;
+}
+
+.menuItems > img {
+    position: relative;
+    left: 800px;
+    top: -30px;
+}
+/*#moreMenusImage {
+    position: absolute;
+    top: 100px;
+    right: 60px;
+}*/ 
+
+@media only screen and (max-width: 1300px) {
+
+    #menuNav {
+        display: none;
+    }
+
+    #menuSection {
+        position: absolute;
+        top: 80px;
+        left: 0px;
+        width: 101%;
+        height: auto;
+        border: none;
+        box-shadow: none;
+    }
+
+    #menuSection > h1 {
+        font-size: 82px;
+    }
+
+    .menuItems {
+        width: 97%;
+        height: 120px;
+    }
+
+    .menuItems h1 {
+        font-size: 54px;
+    }
+    .menuItems p {
+        font-size: 16pt;
+    }
+    .menuItems .price {
+        left: -170px;
+        top: -70px;
+        font-size: 48pt;
+    }
+    .menuItems a {
+        width: 10%;
+        height: 85%;
+        top: -110px;
+        left: 140px;
+
+    }
+    .menuItems a img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/*#endregion*/
+
+
+/*#region About*/
+
+#aboutMainSection {
+    position: relative; 
+    width: 60%;
+    min-height: 100%;
+    height: auto;
+    margin: auto;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    background-color: #DDDDDD;
+
+    
+    box-shadow: 22px 0 20px -4px rgba(0, 0, 0, 0.8), -22px 0 20px -4px rgba(0, 0, 0, 0.8);
+}
+
+#aboutWordWrapper {
+    width: 60%;
+    float: left;
+    padding: 2%;
+}
+#aboutWordWrapper h1, h2, p {
+    font-family: 'Open Sans';
+}
+#twitterFeed {
+    width: 30%;
+    height: 100%;
+    float: right;
+    border-left: 1px solid black; 
+}
+
+@media only screen and (max-width: 1300px) {
+    #aboutMainSection {
+        width: 101%;
+        left: 0;
+    }
+
+    #aboutWordWrapper {
+        width: 80%;
+    }
+
+    #twitterFeed {
+        width: 80%;
+        margin-right: auto;
+        float: none;
+        border: none;
+    }
+}
+
+
+/*#endregion*/
+
+
+/*#region Order Page */
+
+/* menu section = middle section */
+#orderMainSection {
+    width: 60%;
+    min-height: 102%;
+    height: auto;
+    top: -10%;
+    margin: auto;
+    position: relative;
+    border: 1px solid black;
+    background-color: #DDDDDD;
+    box-shadow: 22px 0 20px -4px rgba(0, 0, 0, 0.8), -22px 0 20px -4px rgba(0, 0, 0, 0.8);
+}
+#orderMainSection > h1 {
+    text-align: center;
+    font-family: Calibri;
+    font-size: 20pt;
+    color: deeppink;
+    text-decoration: underline black;
+}
+
+/* Menu items = what it sounds.*/
+.orderMenuItems {
+    display: inline-block;
+    width: 98%;
+    height: 13%;
+    margin: 10px;
+}
+.orderMenuItems h1 {
+    font-family: 'Open Sans';
+    margin: .5%;
+    display: inline;
+    font-size: 12pt;
+}
+.orderMenuItems p {
+    font-family: Arial;
+    font-size: 12pt;
+    margin: .5%;
+    display: inline;
+}
+.orderMenuItems a {
+    text-decoration:none; 
+    color: red; 
+    font-size: 18pt;
+}
+
+.orderMenuItems > img {
+    position: relative;
+    left: 800px;
+    top: -30px;
+}
+
+#orderMainSection > h2 {
+    font-family: Arial;
+    position: absolute;
+    right: 28%;
+    bottom: 2%;
+}
+
+#paypal-button {
+    position: absolute;
+    right: 48%;
+    bottom: 2%;
+}
+
+#desktopStyleOrder {
+    width: 400px; 
+    display: inline-block; 
+    margin-left: 30%;
+}
+
+#orderMainSection input[type=number] {
+    width: 50px;
+    height: 50px;
+
+    position: relative;
+    left: 58%;
+
+    font-size: 22pt;
+}
+
+#orderMainSection select {
+    position: absolute;
+    left: 60%;
+    top: 36.2%;
+    
+    font-size: 16pt; 
+    
+    width: 120px;
+    height: 40px;
+}
+
+#orderMainSection > h4 {
+    position: absolute;
+    left: 38%;
+    top: 27%;
+    font-family: Arial;
+    font-size: 24pt;
+}
+
+#orderMainSection > h5 {
+    position: relative;
+    top: 39.6%;
+
+    font-family: Arial;
+    
+    font-size: 16pt;
+}
+
+#orderMainSection #h51 {
+    left: 40%;
+}
+#orderMainSection #h52 {
+    left: 37%;
+}
+
+#orderMainSection #staffTNum {
+    font-size: 42pt;
+    color: black;
+    text-decoration: none;
+}
+
+@media only screen and (max-width: 1300px) {
+
+    #orderMainSection {
+        width: 100%;
+        min-height: 100%;
+
+        position: absolute;
+        top: 10%;
+    }
+    #orderMainSection > h1 {
+        font-size: 50pt;
+    }
+    #orderMainSection > h2 {
+        font-size: 50pt;
+        right: 17%;
+    }
+
+    #desktopStyleOrder {
+        margin-left: 5%;
+        width: 600px;
+    }
+
+    #desktopStyleOrder > h1 {
+        font-size: 35pt;
+    }
+
+ 
+    .orderMenuItems h1 {
+        font-size: 24pt;
+    }
+    .orderMenuItems p {
+        font-size: 38pt;
+    }
+    .orderMenuItems a {
+        font-size: 50pt;
+    }
+
+    #hideOnMobile {
+        display: none;
+    }
+}
+/*#endregion*/

@@ -1,0 +1,545 @@
+﻿@using WebApplication1.Models
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="~/Styles/GlobalStyle.css" type="text/css" />
+    <!-- Changes the small tab icon -->
+    <link rel="icon" href="~/Images/Logo.png" />
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+</head>
+<body>
+    <div id="header">
+        <a href="/Home/"><img src="~/Images/logo.png" id="logoImage" /></a>
+
+
+        <div id="menuBtn">
+            <p>MENUS</p>
+            <div id="menuRightSection">
+                <a href="/menus/lunch">
+                    <div id="pLunch"><p>Lunch</p></div>
+                    <img class="menusIcons" id="lunchMenuIcons" src="~/Images/lunchIcon.png" />
+                </a>
+                <a href="/menus/">
+                    <div id="pDinner"><p>Dinner</p></div>
+                    <img class="menusIcons" id="dinnerMenuIcons" src="~/Images/dinnerIcon.png" />
+                </a>
+                <a href="/menus/drinks">
+                    <div id="pDrinks"><p>Drinks</p></div>
+                    <img class="menusIcons" id="drinkMenuIcons" src="~/Images/drinksIcon.png" />
+                </a>
+            </div>
+        </div>
+        <div id="basketBtn">
+            <a href="/Tickets/index">
+                <p>Order</p>
+                <img src="~/Images/basket.png" />
+                @if (OrderNumber.orderValue > 0)
+                {
+                <div id="orderDisplayCount">
+                    <p>@OrderNumber.orderValue</p>
+                </div>
+                }
+            </a>
+        </div>
+
+        <div id="clockBtn" onclick="showHiddenClock()"></div>
+        <div id="locateBtn" onclick="showHiddenLocation()"><img src="~/Images/locationPointer.png" /></div>
+            
+        <div id="mobileMenuBtn">
+            <img src="~/Images/mobileMenu.png" />
+            <div id="dropDownMobile">
+                <a href="/Tickets/Index">Order - @OrderNumber.orderValue</a>
+                <a href="/menus/lunch">Lunch Menu</a>
+                <a href="/menus/">Dinner Menu</a>
+                <a href="/menus/drinks">Drinks Menu</a>
+                <a href="#">Locate Us</a>
+                <p id="clockBtnMobile" onclick="showHiddenLocation()" style="font-size: 74pt;">Map</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clock Opening Hours-->
+    <div id="hiddenClock">
+        <h1>Opening Hours</h1>
+        <div id="textContainer">
+            <ul>
+                <li>Monday: <p>Closed</p></li>
+                <li>Tuesday: 10:00 - 22:00</li>
+                <li>Wednesday: 10:00 - 22:00</li>
+                <li>Thursday: 10:00 - 22:00</li>
+                <li>Friday: 10:00 - 23:00</li>
+                <li>Saturday: 09:30 - 23:00</li>
+                <li>Sunday: 09:30 - 21:00</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Google Maps -->
+    <div id="hiddenLocation">
+        <div id="googleMapWrapper">
+            <!-- Google map will go here -->
+        </div>
+        <div id="locationWordWrapper">
+            <!-- Text here -->
+            <div id="address">
+                <p>Find us at:</p>
+                <p>7 Wenlock Rd<br />Shrewsbury, Shropshire<br />SY2 6JJ</p>
+            </div>
+            <p id="googleAPITextDistance"></p>
+            <div id="mapImages">
+                <img src="~/Images/Car.png" />
+                <img src="~/Images/Bike.png" />
+                <img src="~/Images/Walk.png" />
+            </div>
+            <div id="mapDurations">
+                <p id="googleAPITextDuration"><!-- car --></p>
+                <p id="googleAPITextDuration2"><!-- bike --></p>
+                <p id="googleAPITextDuration3"><!-- walk --></p>
+                <p id="demo"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        var userLat;
+        var userLong;
+        // Got to use javascript because CSS doesn't have a good :onclick like it does a :hover
+        // :active wasn't working
+        function showHiddenClock() {
+            var x = document.getElementById('hiddenClock');
+            if (x.style.display === 'none') {
+                x.style.display = 'block';
+            } else {
+                x.style.display = 'none';
+            }
+            // Clock and Location divs cover each other, this switch ensures that when you click one while the other
+            // is still displaying, that it then correctly hides it. 
+            var y = document.getElementById('hiddenLocation');
+            if (y.style.display === 'block') {
+                y.style.display = 'none';
+            } 
+        }
+
+        function showHiddenLocation() {
+            getLocation();
+            var x = document.getElementById('hiddenLocation');
+            if (x.style.display === 'none') {
+                x.style.display = 'block';
+            } else {
+                x.style.display = 'none';
+            }
+            var y = document.getElementById('hiddenClock');
+            if (y.style.display == 'block') {
+                y.style.display = 'none';
+            }
+            myMap();
+            // This is a simple work around to the grey box issue - Google maps wouldn't show up  inside a hidden element, so you simply recall it
+            // when you click it - Also cant have 2 onclicks inside one div.
+        }
+
+
+        // Google maps API
+        function myMap() {
+
+            // Google MAP API- Code generated at https://mapstyle.withgoogle.com/ - JSON code
+            var styledMapType = new google.maps.StyledMapType(
+                [{
+      elementType: "geometry",
+      stylers: [
+        {
+            "color": "#ebe3cd"
+        }
+      ]
+  },
+  {
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+            "color": "#523735"
+        }
+      ]
+  },
+  {
+      elementType: "labels.text.stroke",
+      stylers: [
+        {
+            "color": "#f5f1e6"
+        }
+      ]
+  },
+  {
+      featureType: "administrative",
+      elementType: "geometry.stroke",
+      stylers: [
+        {
+            color: "#c9b2a6"
+        }
+      ]
+  },
+  {
+      featureType: "administrative.land_parcel",
+      elementType: "geometry.stroke",
+      stylers: [
+        {
+            color: "#dcd2be"
+        }
+      ]
+  },
+  {
+      featureType: "administrative.land_parcel",
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+            color: "#ae9e90"
+        }
+      ]
+  },
+  {
+      featureType: "landscape.natural",
+      elementType: "geometry",
+      stylers: [
+        {
+            color: "#dfd2ae"
+        }
+      ]
+  },
+  {
+      featureType: "poi",
+      elementType: "geometry",
+      stylers: [
+        {
+            color: "#dfd2ae"
+        }
+      ]
+  },
+  {
+      featureType: "poi",
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+            "color": "#93817c"
+        }
+      ]
+  },
+  {
+      featureType: "poi.business",
+      stylers: [
+        {
+            visibility: "off"
+        }
+      ]
+  },
+  {
+      featureType: "poi.park",
+      elementType: "geometry.fill",
+      stylers: [
+        {
+            color: "#a5b076"
+        }
+      ]
+  },
+  {
+      featureType: "poi.park",
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+            color: "#447530"
+        }
+      ]
+  },
+  {
+      featureType: "road",
+      elementType: "geometry",
+      stylers: [
+        {
+            color: "#f5f1e6"
+        }
+      ]
+  },
+  {
+      featureType: "road",
+      elementType: "labels.icon",
+      stylers: [
+        {
+            visibility: "off"
+        }
+      ]
+  },
+  {
+      featureType: "road.arterial",
+      elementType: "geometry",
+      stylers: [
+        {
+            color: "#fdfcf8"
+        }
+      ]
+  },
+  {
+      featureType: "road.highway",
+      elementType: "geometry",
+      stylers: [
+        {
+            color: "#f8c967"
+        }
+      ]
+  },
+  {
+      featureType: "road.highway",
+      elementType: "geometry.stroke",
+      stylers: [
+        {
+            color: "#e9bc62"
+        }
+      ]
+  },
+  {
+      featureType: "road.highway.controlled_access",
+      elementType: "geometry",
+      stylers: [
+        {
+            color: "#e98d58"
+        }
+      ]
+  },
+  {
+      featureType: "road.highway.controlled_access",
+      elementType: "geometry.stroke",
+      stylers: [
+        {
+            color: "#db8555"
+        }
+      ]
+  },
+  {
+      featureType: "road.local",
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+            color: "#806b63"
+        }
+      ]
+  },
+  {
+      featureType: "transit",
+      stylers: [
+        {
+            "visibility": "off"
+        }
+      ]
+  },
+  {
+      featureType: "transit.line",
+      elementType: "geometry",
+      stylers: [
+        {
+            color: "#dfd2ae"
+        }
+      ]
+  },
+  {
+      featureType: "transit.line",
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+            color: "#8f7d77"
+        }
+      ]
+  },
+  {
+      featureType: "transit.line",
+      elementType: "labels.text.stroke",
+      stylers: [
+        {
+            color: "#ebe3cd"
+        }
+      ]
+  },
+  {
+      featureType: "transit.station",
+      elementType: "geometry",
+      stylers: [
+        {
+            color: "#dfd2ae"
+        }
+      ]
+  },
+  {
+      featureType: "water",
+      elementType: "geometry.fill",
+      stylers: [
+        {
+            color: "#b9d3c2"
+        }
+      ]
+  },
+  {
+      featureType: "water",
+      elementType: "labels.text.fill",
+      stylers: [
+        {
+            color: "#92998d"
+        }
+      ]
+  }
+                ],
+                { name: 'Styled Map' });
+
+            var myCenter = new google.maps.LatLng(52.7030724, -2.7316171);
+            // going to dynamically change this.
+            var myHome = new google.maps.LatLng(userLat, userLong);
+
+            var mapCanvas = document.getElementById("googleMapWrapper");
+            var mapOptions = {
+                center: myCenter, zoom: 13, mapTypeControlOptions: {
+                    mapTypeIds: ['roadmap', 'satellite', 'hybrid', 'terrain',
+                            'styled_map']
+                }
+            };
+            var map = new google.maps.Map(mapCanvas, mapOptions);
+            map.mapTypes.set('styled_map', styledMapType);
+            map.setMapTypeId('styled_map');
+            var pointerToUsIcon = { url: '../Images/logo.png', scaledSize: new google.maps.Size(40, 40) }
+            var marker = new google.maps.Marker({ position: myCenter, icon: pointerToUsIcon});
+            marker.setMap(map);
+
+            var service = new google.maps.DistanceMatrixService();
+            // Reusing the same callback function got messy, it was printing out the results far too many times when appending the string.
+            service.getDistanceMatrix(
+              {
+                  origins: [myCenter],
+                  destinations: [myHome],
+                  travelMode: 'DRIVING',
+                  unitSystem: google.maps.UnitSystem.IMPERIAL,
+                  avoidHighways: false,
+                  avoidTolls: false
+              }, callback);
+            service.getDistanceMatrix(
+              {
+                  origins: [myCenter],
+                  destinations: [myHome],
+                  travelMode: 'BICYCLING',
+                  unitSystem: google.maps.UnitSystem.IMPERIAL,
+                  avoidHighways: false,
+                  avoidTolls: false
+              }, callback2);
+            service.getDistanceMatrix(
+              {
+                  origins: [myCenter],
+                  destinations: [myHome],
+                  travelMode: 'WALKING',
+                  unitSystem: google.maps.UnitSystem.IMPERIAL,
+                  avoidHighways: false,
+                  avoidTolls: false
+              }, callback3);
+
+
+        }
+        // https://developers.google.com/maps/documentation/directions/intro#UnitSystems - JSON Response
+        // This function recieves back a response in such a format from google, this function loops through it, we then collect the data we want and display it.
+        function callback(response, status) {
+            if (status == 'OK') {
+                var origins = response.originAddresses;
+                var destinations = response.destinationAddresses;
+                var outputDistance = document.getElementById("googleAPITextDistance");
+                var outputDuration = document.getElementById("googleAPITextDuration");
+
+                for (var i = 0; i < origins.length; i++) {
+                    var results = response.rows[i].elements;
+                    for (var j = 0; j < results.length; j++) {
+                        var element = results[j];
+                        var distance = element.distance.text;
+                        var duration = element.duration.text;
+                        // duration = "mins" but I want it to say "minutes" so i'm just splitting it up at the s, so durationFormat[0] is just 'min'
+                        var durationFormat = duration.split("s");
+                        outputDistance.innerHTML = "You are currently <b>" + distance + "les</b> from us!<br/>";
+                        outputDuration.innerHTML = durationFormat[0] + "utes";
+                    }
+                }
+            } else {
+                window.alert(status);
+            }
+        }
+        // callback for biking - Appending the same div in 1 function doesn't work right
+        function callback2(response, status) {
+            if (status == 'OK') {
+                var origins = response.originAddresses;
+                var destinations = response.destinationAddresses;
+                var outputDuration = document.getElementById("googleAPITextDuration2");
+
+                for (var i = 0; i < origins.length; i++) {
+                    var results = response.rows[i].elements;
+                    for (var j = 0; j < results.length; j++) {
+                        var element = results[j];
+                        var duration = element.duration.text;
+                        // duration = "mins" but I want it to say "minutes" so i'm just splitting it up at the s, so durationFormat[0] is just 'min'
+                        var durationFormat = duration.split("s");
+                        outputDuration.innerHTML = "" + durationFormat[0] + "utes";
+                    }
+                }
+            } else {
+                window.alert(status);
+            }
+        }
+        // Callback for walking.
+        function callback3(response, status) {
+            if (status == 'OK') {
+                var origins = response.originAddresses;
+                var destinations = response.destinationAddresses;
+                var outputDuration = document.getElementById("googleAPITextDuration3");
+
+                for (var i = 0; i < origins.length; i++) {
+                    var results = response.rows[i].elements;
+                    for (var j = 0; j < results.length; j++) {
+                        var element = results[j];
+                        var duration = element.duration.text;
+                        // duration = "mins" but I want it to say "minutes" so i'm just splitting it up at the s, so durationFormat[0] is just 'min'
+                        var durationFormat = duration.split("s");
+                        outputDuration.innerHTML = "" + durationFormat[0] + "utes";
+                    }
+                }
+            } else {
+                window.alert(status);
+            }
+        }
+
+
+        // HTML Geolocation API to find Lat and Long - Code is obviously copied from their website, since this is how their API works
+        // But what I am doing with it is my own - hopefully going to get a rough location on google maps, and calculate a distance
+        // Maybe google maps API has something for this.
+        var x = document.getElementById("demo");
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                // timeout: 5000, allows 5 seconds to get the location 
+                // http://diveintohtml5.info/geolocation.html - More API for how this works. 
+                navigator.geolocation.getCurrentPosition(showPosition, locationNotRecieved, { timeout: 5000, enableHighAccuracy: true });
+            } else {
+               x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+        function locationNotRecieved(positionError) {
+            console.log(positionError);
+        }
+        function showPosition(position) {
+            userLat = position.coords.latitude;
+            userLong = position.coords.longitude;
+            /* var accuracy = position.coords.accuracy;
+            x.innerHTML = "Latitude: " + position.coords.latitude +
+           "<br>Longitude: " + position.coords.longitude + "<br>" + accuracy;*/
+        }
+
+    </script>
+    <!-- API key but this one works and the other one wouldn't work with the distance service -->
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjixK0gwpL8odMtYOTqeCkFphMCJA_pAI&callback=myMap">
+    </script>
+    <!-- API Key -->
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBjixK0gwpL8odMtYOTqeCkFphMCJA_pAI&callback=myMap"></script> -->
+    <!-- Page specific content will load here-->
+    @RenderBody()
+</body>
+</html>

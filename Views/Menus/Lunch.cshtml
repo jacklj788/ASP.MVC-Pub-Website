@@ -1,0 +1,38 @@
+﻿@model IEnumerable<WebApplication1.Models.Menu>
+
+@{
+    Layout = "~/Views/Shared/Global.cshtml"; // Commenting this out still uses it because it's defined in _ViewStart
+                                             // Viewbag is used to pass data from control to the view
+    ViewBag.Title = "Lunch";
+}
+
+<div id="fixedBlock">
+
+</div>
+<div id="menuSection">
+    <div id="blankSpaceTopMenu">
+        <p>Lunch Menu</p>
+        <p id="time">10 - 2pm</p>
+    </div>
+    <h1>Lunch</h1>
+
+    @foreach (var item in Model)
+    {
+        if (item.Category == "Lunch")
+        {
+
+            <div class="menuItems" onmouseover="@{TempData["orderName" + item.ID] = item.Name; TempData["orderPrice" + item.ID] = item.Price; TempData["orderDescription" + item.ID] = item.Descritpion; TempData["orderCategory" + item.ID] = item.Category;}">
+                <h1>@Html.DisplayFor(modelItem => item.Name)</h1>
+                <p>@Html.DisplayFor(modelItem => item.Descritpion)</p>
+                <div class="price">£@Html.DisplayFor(modelItem => item.Price)</div>
+
+                <a href="/Tickets/Create/@item.ID"><img src="~/Images/add.png" /></a>
+            </div>
+        }
+    }
+
+</div>
+
+<script type="text/javascript">
+</script>
+<!-- <img src="~/Images/moreMenus.png" id="moreMenusImage"/> -->

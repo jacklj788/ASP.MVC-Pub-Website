@@ -1,0 +1,234 @@
+﻿@using WebApplication1.Models
+@model IEnumerable<WebApplication1.Models.Ticket>
+
+@{
+    Layout = "~/Views/Shared/Global.cshtml";
+    ViewBag.Title = "Your Order";
+
+    int orderCount = 0;
+
+    float totalPrice = 0;
+}
+
+<div id="orderMainSection">
+    <!-- Works. :) -->
+    <div id="blankSpaceTopMenu">
+        <p id="hideOnMobile">Your Order</p>
+    </div>
+
+    @{ 
+        OrderNumber.paid = false;
+    }
+    @if (OrderNumber.paid == false)
+    {
+
+    <h4>Table Number</h4>
+
+    <form method="post">
+        <input type="number" name="formTableNumber" id="formTNumberValue"/>
+    </form>
+
+
+
+        foreach (var item in Model)
+        {
+            if (item.Category.Trim() == "Starters")
+            {
+            <h1>Starters</h1>
+                // Only want it to print once, so break out of this loop.
+                break;
+            }
+        }
+
+        foreach (var item in Model)
+        {
+            orderCount += item.Quantity * 1;
+            if (item.Category.Trim() == "Starters")
+            {
+            <div class="orderMenuItems">
+                <div id="desktopStyleOrder">
+                    @{float a = (float)item.Price * item.Quantity;}
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                </div>
+                <p>£@a</p>
+                @*@Html.ActionLink("Delete", "Delete", new { id = item.ID })*@
+
+                <!-- &#8855; is a O with an X in it. HTML Code. -->
+                <a href="/Tickets/Delete/@item.ID"><b>&#8855;</b></a>
+
+            </div>
+        }
+
+            // Can just do this in one since it doesn't matter what it is.
+            totalPrice += ((float)item.Price * item.Quantity);
+        }
+
+            foreach (var item in Model)
+            {
+                 if (item.Category.Trim() == "Main Meal")
+                 {
+                    <h1>Mains</h1>
+                    // Only want it to print once, so break out of this loop.
+                    break;
+                 }
+            }
+            foreach (var item in Model)
+            {
+                if (item.Category.Trim() == "Main Meal")
+                {
+                    <div class="orderMenuItems">
+                    <div id="desktopStyleOrder">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                    </div>
+                    @{float a = (float)item.Price * item.Quantity;}
+                    <p>£@a</p>
+
+                    <a href="/Tickets/Delete/@item.ID"><b>&#8855;</b></a>
+                </div>
+                 }
+            }
+
+            foreach (var item in Model)
+            {
+                if (item.Category.Trim() == "Desserts")
+                {
+                   <h1>Desserts</h1>
+                   // Only want it to print once, so break out of this loop.
+                   break;
+                }
+            }
+            foreach (var item in Model)
+            {
+                if (item.Category.Trim() == "Desserts")
+                {
+                    <div class="orderMenuItems">
+                    <div id="desktopStyleOrder">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                    </div>
+                    @{float a = (float)item.Price * item.Quantity;}
+                    <p>£@a</p>
+
+                    <a href="/Tickets/Delete/@item.ID"><b>&#8855;</b></a>
+                    </div>
+                }
+            }
+
+            foreach (var item in Model)
+            {
+                if (item.Category.Trim() == "Lunch")
+                {
+                    <h1>Lunch</h1>
+                            // Only want it to print once, so break out of this loop.
+                    break;
+                }
+            }
+            foreach (var item in Model)
+            {
+                if (item.Category.Trim() == "Lunch")
+                {
+                    <div class="orderMenuItems">
+                    <div id="desktopStyleOrder">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                    </div>
+                    @{float a = (float)item.Price * item.Quantity;}
+                    <p>£@a</p>
+
+                    <a href="/Tickets/Delete/@item.ID"><b>&#8855;</b></a>
+                    </div>
+                }
+            }
+
+            foreach (var item in Model)
+            {
+                if (item.Category.Trim() == "alcoholic" || item.Category.Trim() == "non-a")
+                {
+                    <h1>Drinks</h1>
+                            // Only want it to print once, so break out of this loop.
+                    break;
+                }
+            }
+            foreach (var item in Model)
+            {
+                if (item.Category.Trim() == "alcoholic" || item.Category.Trim() == "non-a")
+                {
+                    <div class="orderMenuItems">
+                    <div id="desktopStyleOrder">
+                    <h1>x @Html.DisplayFor(modelItem => item.Quantity) - @Html.DisplayFor(modelItem => item.Name)</h1>
+                    </div>
+                    @{float a = (float)item.Price * item.Quantity;}
+                    <p>£@a</p>
+
+                    <a href="/Tickets/Delete/@item.ID"><b>&#8855;</b></a>
+                    </div>
+                }
+            }
+            <!-- Ugly code should stlye it in CSS instead -->
+            <br /><br /><br /><br />
+            <h2>£@totalPrice</h2>
+            <div id="paypal-button"></div>
+                            OrderNumber.orderValue = orderCount;
+                        }
+                        else
+                        {
+                            OrderNumber.orderValue = 0;
+        <p>You have paid!</p>
+        string asbc = "Confirmation/" + OrderNumber.tNum;
+        <a href="@asbc">Track your order here.</a>
+    }
+</div>
+<script>
+        paypal.Button.render({
+
+            env: 'sandbox', // Or 'sandbox',
+
+            client: {
+                // Key codes generated on my dev account. 
+                sandbox: 'AWyh4EH-vgQhTSV_5qjqHc0Fa_nCiqoCKJSK-zvUdmYF5gj5HL6Sv93Y8Rjw-7YByyhQpnMrjUYNALBY',
+                production: 'AbUBCNM6ykMe48X0ZUhm6PjjDz8fvX8sWTlEnPPQ45ZCQTu0armNO5wElEbLTaulIN_PjrcKuLmRs5gE'
+            },
+
+            commit: true, // Show a 'Pay Now' button
+
+            style: {
+                size: 'medium',
+                color: 'gold',
+                shape: 'rect',
+                label: 'checkout'
+            },
+
+
+            payment: function(data, actions) {
+                // Set up the payment here
+                return actions.payment.create({
+                    payment: {
+                        transactions: [
+                            {
+                                amount: { total: @totalPrice, currency: 'GBP' }
+                            }
+                        ]
+                    }
+                });
+            },
+
+
+            onAuthorize: function(data, actions) {
+                    // Execute the payment here
+                return actions.payment.execute().then(function (payment) {
+
+                        @{ 
+                            OrderNumber.paid = true;
+                        }
+
+                        var tnum = document.getElementById("formTNumberValue").value;
+                        // Lets the user know it all worked
+                        window.alert("Payment Complete");
+                        // Redirect to another page
+                        window.location.replace("http://localhost:53301/Tickets/Confirmation/" + tnum);
+
+                        // The payment is complete!
+                        // You can now show a confirmation message to the customer
+                    });
+           }
+
+        }, '#paypal-button');
+</script>
